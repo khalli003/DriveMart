@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "com.drivemart.grpc";
+option java_outer_classname = "OrderServiceProto";
+
+service OrderService {
+  rpc CreateOrder (OrderRequest) returns (OrderResponse);
+  rpc GetOrder (OrderIdRequest) returns (OrderResponse);
+}
+
+message OrderRequest {
+  string description = 1;
+  int32 quantity = 2;
+  double price = 3;
+}
+
+message OrderResponse {
+  string orderId = 1;
+  string description = 2;
+  int32 quantity = 3;
+  double price = 4;
+}
+
+message OrderIdRequest {
+  string orderId = 1;
+}
