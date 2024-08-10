@@ -5,6 +5,8 @@ import com.drivemart.repository.BalanceTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class BalanceTransactionService {
 
@@ -13,8 +15,10 @@ public class BalanceTransactionService {
 
     @Autowired
     private CompanyService companyService;
+
     @Autowired
     private DriverService driverService;
+
     @Autowired
     private CourierService courierService;
 
@@ -24,9 +28,9 @@ public class BalanceTransactionService {
 
     public BalanceTransaction createTransaction(BalanceTransaction transaction) {
         // Handle balance changes based on transaction type
-        if (transaction.getType() == TransactionType.CREDIT) {
+        if (transaction.getTransactionType() == BalanceTransaction.TransactionType.CREDIT) {
             creditAccount(transaction.getAccountId(), transaction.getAmount());
-        } else if (transaction.getType() == TransactionType.DEBIT) {
+        } else if (transaction.getTransactionType() == BalanceTransaction.TransactionType.DEBIT) {
             debitAccount(transaction.getAccountId(), transaction.getAmount());
         }
         return balanceTransactionRepository.save(transaction);
@@ -48,16 +52,15 @@ public class BalanceTransactionService {
         return false;
     }
 
-    private void creditAccount(Long accountId, Double amount) {
+    private void creditAccount(Long accountId, BigDecimal amount) {
         // Implement credit logic here, based on the account type
         // For simplicity, assume accountId is a Company ID for this example
         companyService.addBalance(accountId, amount);
     }
 
-    private void debitAccount(Long accountId, Double amount) {
+    private void debitAccount(Long accountId, BigDecimal amount) {
         // Implement debit logic here, based on the account type
         // For simplicity, assume accountId is a Company ID for this example
         companyService.subtractBalance(accountId, amount);
     }
 }
-

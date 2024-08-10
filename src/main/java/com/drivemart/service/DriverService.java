@@ -5,6 +5,8 @@ import com.drivemart.repository.DriverRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class DriverService {
 
@@ -33,5 +35,24 @@ public class DriverService {
             return true;
         }
         return false;
+    }
+    public boolean existsById(Long id) {
+        return driverRepository.existsById(id);
+    }
+
+    public void addBalance(Long driverId, BigDecimal amount) {
+        Driver driver = findById(driverId);
+        if (driver != null) {
+            driver.setBalance(driver.getBalance().add(amount));
+            driverRepository.save(driver);
+        }
+    }
+
+    public void subtractBalance(Long driverId, BigDecimal amount) {
+        Driver driver = findById(driverId);
+        if (driver != null) {
+            driver.setBalance(driver.getBalance().subtract(amount));
+            driverRepository.save(driver);
+        }
     }
 }

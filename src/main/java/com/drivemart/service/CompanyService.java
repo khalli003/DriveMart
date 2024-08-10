@@ -5,7 +5,8 @@ import com.drivemart.model.Company;
 import com.drivemart.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.lang.Double;
+
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Service
@@ -43,18 +44,23 @@ public class CompanyService {
         return company != null ? company.getCars() : null;
     }
 
-    public void addBalance(Long companyId, Double amount) {
+    public boolean existsById(Long id) {
+        return companyRepository.existsById(id);
+    }
+    public void addBalance(Long companyId, BigDecimal amount) {
         Company company = findById(companyId);
         if (company != null) {
-            company.setBalance(company.getBalance() + amount );
+            BigDecimal newBalance = company.getBalance().add(amount);
+            company.setBalance(newBalance);
             companyRepository.save(company);
         }
     }
 
-    public void subtractBalance(Long companyId, Double amount) {
+    public void subtractBalance(Long companyId, BigDecimal amount) {
         Company company = findById(companyId);
         if (company != null) {
-            company.setBalance(company.getBalance() - amount);
+            BigDecimal newBalance = company.getBalance().add(amount);
+            company.setBalance(newBalance);
             companyRepository.save(company);
         }
     }

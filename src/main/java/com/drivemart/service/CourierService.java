@@ -5,6 +5,8 @@ import com.drivemart.repository.CourierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class CourierService {
 
@@ -33,5 +35,26 @@ public class CourierService {
             return true;
         }
         return false;
+    }
+    public boolean existsById(Long id) {
+        return courierRepository.existsById(id);
+    }
+
+    public void addBalance(Long courierId, BigDecimal amount) {
+        Courier courier = findById(courierId);
+        if (courier != null) {
+            BigDecimal newBalance = courier.getBalance().add(amount);
+            courier.setBalance(newBalance);
+            courierRepository.save(courier);
+        }
+    }
+
+    public void subtractBalance(Long courierId, BigDecimal amount) {
+        Courier courier = findById(courierId);
+        if (courier != null) {
+            BigDecimal newBalance = courier.getBalance().subtract(amount);
+            courier.setBalance(newBalance);
+            courierRepository.save(courier);
+        }
     }
 }

@@ -36,4 +36,26 @@ public class BalanceTransaction {
 
     @Column(nullable = false)
     private String type; // Тип транзакции (например, "Пополнение", "Списание")
+
+    @Column(name = "account_id")
+    private Long accountId; // Идентификатор счета, если это необходимо
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type", nullable = false)
+    private TransactionType transactionType; // Тип транзакции (например, "Дебет", "Кредит")
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransactionType Type; // Тип транзакции (например, "Пополнение", "Списание")
+
+    @Transient
+    private Long AccountId; // Уникальный идентификатор для учета баланса
+
+
+    public enum TransactionType {
+        DEBIT,
+        CREDIT
+    }
+
 }
+

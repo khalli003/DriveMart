@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 
 
 @Data
 @NoArgsConstructor
 @Entity
-public class Courier {
+public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,8 +18,8 @@ public class Courier {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
-    private String region; // Регион, в котором работает курьер
+    @Column(nullable = false, unique = true)
+    private String licenseNumber;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
@@ -26,5 +27,14 @@ public class Courier {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+    private BigDecimal balance;
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }

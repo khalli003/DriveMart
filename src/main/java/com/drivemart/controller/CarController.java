@@ -1,6 +1,7 @@
 package com.drivemart.controller;
 
 import com.drivemart.model.Car;
+import com.drivemart.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
