@@ -15,7 +15,7 @@ java {
 }
 
 springBoot {
-    mainClass = 'com.drivemart.DriveMartApplication'
+    mainClass.set('com.drivemart.DriveMartApplication')
 }
 
 repositories {
@@ -23,39 +23,68 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // Основные зависимости Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.apache.kafka:kafka-streams'
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'com.google.protobuf:protobuf-java:3.21.7'
-    runtimeOnly 'io.grpc:grpc-netty-shaded:1.49.2'
-    implementation 'io.grpc:grpc-protobuf:1.49.2'
-    implementation 'io.grpc:grpc-stub:1.49.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // Зависимость для работы с OAuth2 Resource Server
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.security:spring-security-config'
+
+
+    // Зависимость для работы с JWT
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+    // Другие зависимости, необходимые для вашего проекта
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.kafka:spring-kafka:3.0.2'
+
+    implementation 'com.google.protobuf:protobuf-java:3.21.9'
+    implementation 'io.grpc:grpc-netty-shaded:1.49.1'
+    implementation 'io.grpc:grpc-protobuf:1.49.1'
+    implementation 'io.grpc:grpc-stub:1.49.1'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+    // Логирование и мониторинг
+    implementation 'io.micrometer:micrometer-core'
+
+    // Подключение к PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
+
+    // Lombok для удобства работы с кодом
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Для тестирования
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    runtimeOnly 'org.springframework.boot:spring-boot-docker-compose'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+springBoot {
+    mainClass.set('com.drivemart.DriveMartApplication')
+}
+
+repositories {
+    mavenCentral()
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.21.7"
+        artifact = "com.google.protobuf:protoc:3.21.9"
     }
     plugins {
         grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.49.2'
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.49.1'
         }
     }
     generateProtoTasks {
@@ -70,9 +99,14 @@ protobuf {
     }
 }
 
-
-sourceSets.main.java.srcDir new File(buildDir, 'generated/source/proto/main/java')
-sourceSets.main.java.srcDir new File(buildDir, 'generated/source/proto/main/grpc')
+sourceSets {
+    main {
+        java {
+            srcDir new File(buildDir, 'generated/source/proto/main/java')
+            srcDir new File(buildDir, 'generated/source/proto/main/grpc')
+        }
+    }
+}
 
 test {
     useJUnitPlatform()
