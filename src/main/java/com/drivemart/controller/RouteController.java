@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/routes")
 public class RouteController {
@@ -15,19 +17,31 @@ public class RouteController {
     private RouteService routeService;
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Route> getRouteByOrderId(@PathVariable Long orderId) {
+    public ResponseEntity<Route> getRouteByOrderId(@PathVariable String orderId) {
         Route route = routeService.findByOrderId(orderId);
         return route != null ? ResponseEntity.ok(route) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<Route>> getAllRoutes() {
+        List<Route> routes = routeService.findAllRoutes();
+        return ResponseEntity.ok(routes);
+    }
+
     @PostMapping
     public ResponseEntity<Route> createRoute(@RequestBody Route route) {
+        if (route.getPoints() == null || route.getPoints().isEmpty()) {
+            return ResponseEntity.badRequest().body(null); // Валидация
+        }
         Route createdRoute = routeService.createRoute(route);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRoute);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Route> updateRoute(@PathVariable Long id, @RequestBody Route route) {
+        if (route.getPoints() == null || route.getPoints().isEmpty()) {
+            return ResponseEntity.badRequest().body(null); // Валидация
+        }
         Route updatedRoute = routeService.updateRoute(id, route);
         return updatedRoute != null ? ResponseEntity.ok(updatedRoute) : ResponseEntity.notFound().build();
     }
@@ -38,4 +52,3 @@ public class RouteController {
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
-

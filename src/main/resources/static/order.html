@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Управление Заказами</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>Управление Заказами</h1>
+
+  <form id="orderForm">
+    <div class="form-group">
+      <label for="category">Категория</label>
+      <input type="text" class="form-control" id="category" required>
+    </div>
+    <div class="form-group">
+      <label for="amount">Сумма</label>
+      <input type="number" class="form-control" id="amount" step="0.01" required>
+    </div>
+    <div class="form-group">
+      <label for="companyId">ID Компании</label>
+      <input type="number" class="form-control" id="companyId" required>
+    </div>
+    <div class="form-group">
+      <label for="driverId">ID Водителя</label>
+      <input type="number" class="form-control" id="driverId">
+    </div>
+    <div class="form-group">
+      <label for="courierId">ID Курьера</label>
+      <input type="number" class="form-control" id="courierId">
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить Заказ</button>
+  </form>
+
+  <h2>Список Заказов</h2>
+  <table class="table table-bordered" id="orderTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Категория</th>
+      <th>Сумма</th>
+      <th>Дата Создания</th>
+      <th>Статус</th>
+      <th>ID Компании</th>
+      <th>ID Водителя</th>
+      <th>ID Курьера</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  const apiUrl = '/orders';
+
+  // Функция для отображения заказов
+  function fetchOrders() {
+    fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+              const tableBody = document.getElementById('orderTable').getElementsByTagName('tbody')[0];
+              tableBody.innerHTML = ''; // Очищаем таблицу
+              data.forEach(order => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                        <td>${order.id}</td>
+                        <td>${order.category}</td>
+                        <td>${order.amount}</td>
+                        <td>${new Date(order.createdAt).toLocaleString()}</td>
+                        <td>${order.status || 'Новый'}</td>
+                        <td>${order.company ? order.company.id : 'Нет компании'}</td>
+                        <td>${order.driver ? order.driver.id : 'Нет водителя'}</td>
+                        <td>${order.courier ? order.courier.id : 'Нет курьера'}</td>
+                        <td>
+                            <button onclick="deleteOrder(${order.id})" class="btn btn-danger">Удалить</button>
+                            <button onclick="updateOrder(${order.id})" class="btn btn-info">Редактировать</button>
+                        </td>
+                    `;
+              });
+            });
+  }
+
+  // Функция для добавления заказа
+  document.getElementById('orderForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const newOrder = {
+      category: document.getElementById('category').value,
+      amount: parseFloat(document.getElementById('amount').value),
+      company: { id: parseInt(document.getElementById('companyId').value) },
+      driver: { id: document.getElementById('driverId').value ? parseInt(document.getElementById('driverId').value) : null },
+      courier: { id: document.getElementById('courierId').value ? parseInt(document.getElementById('courierId').value) : null }
+    };
+
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newOrder)
+    })
+            .then(response => response.json())
+            .then(() => {
+              document.getElementById('orderForm').reset(); // Очистить форму
+              fetchOrders(); // Обновить список заказов
+            });
+  });
+
+  // Функция для удаления заказа
+  function deleteOrder(id) {
+    fetch(`${apiUrl}/${id}`, {
+      method: 'DELETE'
+    })
+            .then(() => {
+              fetchOrders(); // Обновить список заказов после удаления
+            });
+  }
+
+  // Функция для обновления заказа
+  function updateOrder(id) {
+    const category = prompt('Введите новую категорию:', '');
+    const amount = prompt('Введите новую сумму:', '');
+    const status = prompt('Введите новый статус:', '');
+    const driverId = prompt('Введите новый ID водителя:', '');
+    const courierId = prompt('Введите новый ID курьера:', '');
+
+    if (category && amount) {
+      const updatedOrder = {
+        category: category,
+        amount: parseFloat(amount),
+        status: status || null,
+        driver: { id: driverId ? parseInt(driverId) : null },
+        courier: { id: courierId ? parseInt(courierId) : null }
+      };
+
+      fetch(`${apiUrl}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedOrder)
+      })
+              .then(() => {
+                fetchOrders(); // Обновить список заказов после обновления
+              });
+    }
+  }
+
+  // Инициализация
+  fetchOrders();
+</script>
+</body>
+</html>

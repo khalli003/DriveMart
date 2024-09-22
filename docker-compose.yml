@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: keycloakdb
       POSTGRES_USER: keycloakuser
       POSTGRES_PASSWORD: keycloakpass
+    ports:
+      - "5432:5432"
     networks:
       - keycloak-network
   keycloak:
@@ -45,3 +47,4 @@ networks:
 volumes:
   postgres_data:
     driver: local
+

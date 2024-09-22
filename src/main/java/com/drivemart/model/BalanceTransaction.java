@@ -44,9 +44,9 @@ public class BalanceTransaction {
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType; // Тип транзакции (например, "Дебет", "Кредит")
 
-    @Column(nullable = false)
+   /* @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TransactionType Type; // Тип транзакции (например, "Пополнение", "Списание")
+    private TransactionType Type; // Тип транзакции (например, "Пополнение", "Списание")*/
 
     @Transient
     private Long AccountId; // Уникальный идентификатор для учета баланса

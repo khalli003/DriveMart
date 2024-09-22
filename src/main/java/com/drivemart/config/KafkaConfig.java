@@ -13,8 +13,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.KafkaProperties;
-import org.springframework.security.config.annotation.web.configuration.OAuth2ResourceServerConfigurer;
+
 
 
 

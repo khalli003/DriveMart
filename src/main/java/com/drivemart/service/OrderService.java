@@ -39,15 +39,15 @@ public class OrderService {
         return false;
     }
 
-    public Route getOrderRoute(Long orderId) {
+    public Route getOrderRoute(String orderId) {
         return routeService.findByOrderId(orderId);
     }
 
-    public void assignOrderToDriver(Long orderId, Long driverId) {
-        Order order = findById(orderId);
+    public void assignOrderToDriver(String orderId, String driverId) {
+        Order order = findById(Long.valueOf(orderId));
         if (order != null) {
-            order.setDriverId(driverId);
-            updateOrder(orderId, order);
+            order.setDriverId(Long.valueOf(driverId));
+            updateOrder(Long.valueOf(orderId), order);
         }
     }
 }

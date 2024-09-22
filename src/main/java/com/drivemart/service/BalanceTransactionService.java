@@ -53,14 +53,12 @@ public class BalanceTransactionService {
     }
 
     private void creditAccount(Long accountId, BigDecimal amount) {
-        // Implement credit logic here, based on the account type
-        // For simplicity, assume accountId is a Company ID for this example
+
         companyService.addBalance(accountId, amount);
     }
 
     private void debitAccount(Long accountId, BigDecimal amount) {
-        // Implement debit logic here, based on the account type
-        // For simplicity, assume accountId is a Company ID for this example
+
         companyService.subtractBalance(accountId, amount);
     }
 }

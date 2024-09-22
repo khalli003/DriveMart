@@ -5,9 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -25,66 +24,102 @@ public class Company {
     private String registrationNumber;
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "company")
-    private Set<Car> cars;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Car> cars = new HashSet<>();
 
-    @OneToMany(mappedBy = "company")
-    private Set<Driver> drivers;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Driver> drivers = new HashSet<>();
 
-    @OneToMany(mappedBy = "company")
-    private Set<Courier> couriers;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Courier> couriers = new HashSet<>();
 
-    @OneToMany(mappedBy = "company")
-    private Set<Order> orders;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders = new HashSet<>();
 
     @Column(nullable = false)
     private String address;
 
-    // Additional fields as needed
+    // Дополнительные поля по необходимости
 
     public void addCar(Car car) {
-        cars.add(car);
-        car.setCompany(this);
+        if (car != null && !cars.contains(car)) {
+            cars.add(car);
+            car.setCompany(this);
+        } else {
+            throw new IllegalArgumentException("Car is null or already added.");
+        }
     }
 
     public void removeCar(Car car) {
-        cars.remove(car);
-        car.setCompany(null);
+        if (car != null && cars.contains(car)) {
+            cars.remove(car);
+            car.setCompany(null);
+        } else {
+            throw new IllegalArgumentException("Car is null or not found in the company.");
+        }
     }
 
     public void addDriver(Driver driver) {
-        drivers.add(driver);
-        driver.setCompany(this);
+        if (driver != null && !drivers.contains(driver)) {
+            drivers.add(driver);
+            driver.setCompany(this);
+        } else {
+            throw new IllegalArgumentException("Driver is null or already added.");
+        }
     }
 
     public void removeDriver(Driver driver) {
-        drivers.remove(driver);
-        driver.setCompany(null);
+        if (driver != null && drivers.contains(driver)) {
+            drivers.remove(driver);
+            driver.setCompany(null);
+        } else {
+            throw new IllegalArgumentException("Driver is null or not found in the company.");
+        }
     }
 
     public void addCourier(Courier courier) {
-        couriers.add(courier);
-        courier.setCompany(this);
+        if (courier != null && !couriers.contains(courier)) {
+            couriers.add(courier);
+            courier.setCompany(this);
+        } else {
+            throw new IllegalArgumentException("Courier is null or already added.");
+        }
     }
 
     public void removeCourier(Courier courier) {
-        couriers.remove(courier);
-        courier.setCompany(null);
+        if (courier != null && couriers.contains(courier)) {
+            couriers.remove(courier);
+            courier.setCompany(null);
+        } else {
+            throw new IllegalArgumentException("Courier is null or not found in the company.");
+        }
     }
 
     public void addOrder(Order order) {
-        orders.add(order);
-        order.setCompany(this);
+        if (order != null && !orders.contains(order)) {
+            orders.add(order);
+            order.setCompany(this);
+        } else {
+            throw new IllegalArgumentException("Order is null or already added.");
+        }
     }
 
     public void removeOrder(Order order) {
-        orders.remove(order);
-        order.setCompany(null);
+        if (order != null && orders.contains(order)) {
+            orders.remove(order);
+            order.setCompany(null);
+        } else {
+            throw new IllegalArgumentException("Order is null or not found in the company.");
+        }
     }
 
     public void updateBalance(BigDecimal amount) {
-        this.balance = this.balance.add(amount);
+        if (amount != null) {
+            this.balance = this.balance.add(amount);
+        } else {
+            throw new IllegalArgumentException("Amount cannot be null.");
+        }
     }
 }

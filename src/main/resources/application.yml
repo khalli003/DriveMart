@@ -1,0 +1,15 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: DriveMart
+            client-secret: ELlAYEOdnwlDp9HdFHkZjsWPMR19iZw8
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8180/login/oauth2/code/keycloak"
+        provider:
+          keycloak:
+            authorization-uri: http://localhost:8180/auth/realms/drivemart-realm/protocol/openid-connect/auth
+            token-uri: http://localhost:8180/auth/realms/drivemart-realm/protocol/openid-connect/token
+            user-info-uri: http://localhost:8180/auth/realms/drivemart-realm/protocol/openid-connect/userinfo

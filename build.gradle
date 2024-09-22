@@ -30,10 +30,17 @@ dependencies {
     // Зависимость для работы с OAuth2 Resource Server
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-config'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+
+
 
 
     // Зависимость для работы с JWT
-    implementation 'org.springframework.security:spring-security-oauth2-jose'
+    //implementation 'org.springframework.security:spring-security-oauth2-jose'
+// https://mvnrepository.com/artifact/com.auth0/java-jwt
+    implementation 'com.auth0:java-jwt:4.4.0'
 
     // Другие зависимости, необходимые для вашего проекта
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -49,6 +56,10 @@ dependencies {
 
     // Логирование и мониторинг
     implementation 'io.micrometer:micrometer-core'
+
+
+
+
 
     // Подключение к PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'

@@ -42,7 +42,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/route")
-    public ResponseEntity<Route> getOrderRoute(@PathVariable Long id) {
+    public ResponseEntity<Route> getOrderRoute(@PathVariable String id) {
         Route route = orderService.getOrderRoute(id);
         return route != null ? ResponseEntity.ok(route) : ResponseEntity.notFound().build();
     }
