@@ -5,6 +5,8 @@ services:
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf  # Добавляем конфигурацию для SSL
+      - ./certs:/etc/ssl/certs  # Добавляем сертификаты
     environment:
       POSTGRES_DB: keycloakdb
       POSTGRES_USER: keycloakuser
@@ -13,18 +15,17 @@ services:
       - "5432:5432"
     networks:
       - keycloak-network
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'  # Используем конфигурацию
+
   keycloak:
     image: keycloak/keycloak:latest
     container_name: keycloak
-
-
     ports:
       - 8180:8080
     volumes:
       - ./certs:/opt/keycloak/certs
     command:
-        - start-dev
-
+      - start-dev
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -34,7 +35,8 @@ services:
       DB_PASSWORD: keycloakpass
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: adminpass
-
+      KC_SSL: "on"  # Включаем SSL для Keycloak
+      KC_SSL_REQUIRED: "external"  # Настройка обязательного использования SSL
     networks:
       - keycloak-network
     depends_on:
@@ -47,4 +49,3 @@ networks:
 volumes:
   postgres_data:
     driver: local
-

@@ -13,3 +13,9 @@ spring:
             authorization-uri: http://localhost:8180/auth/realms/drivemart-realm/protocol/openid-connect/auth
             token-uri: http://localhost:8180/auth/realms/drivemart-realm/protocol/openid-connect/token
             user-info-uri: http://localhost:8180/auth/realms/drivemart-realm/protocol/openid-connect/userinfo
+
+        management:
+              endpoints:
+                web:
+                  exposure:
+                    include: "*"

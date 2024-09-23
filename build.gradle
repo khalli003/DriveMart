@@ -56,9 +56,7 @@ dependencies {
 
     // Логирование и мониторинг
     implementation 'io.micrometer:micrometer-core'
-
-
-
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 
     // Подключение к PostgreSQL
